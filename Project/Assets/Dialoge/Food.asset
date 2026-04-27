@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fcd2dc1144354944bdfb82a8ef4d50d, type: 3}
   m_Name: Food
   m_EditorClassIdentifier: 
-  texture: {fileID: 0}
+  foodList:
+  - {fileID: 2800000, guid: 0f9d4a16f1b1a154689855e77343146d, type: 3}
