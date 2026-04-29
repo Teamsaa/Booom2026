@@ -1,0 +1,15 @@
+Font: Microsoft YaHei  Style: Regular
+Point Size: 29   SP/PD Ratio: 17.2%
+
+Characters included: 2502/2504
+Missing characters: 2
+Excluded characters: 0
+
+Characters missing from font file:
+----------------------------------------
+ID: 13	Hex: D	Char []
+ID: 10	Hex: A	Char [
+]
+
+Characters excluded from packing:
+----------------------------------------

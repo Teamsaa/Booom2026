@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 public class Food : Singleton<Food>
 {
     [SerializeField] private FoodScriptableObject food;
-    [SerializeField] private TextScriptableObject text;
 
     public List<string> FoodName => foodName;
     public List<string> FoodText => foodText;
@@ -24,10 +23,13 @@ public class Food : Singleton<Food>
         foodTextures = new List<Texture2D>();
         for (int i = 0; i<food.foodList.Count; i++)
         {
-            foodText[i] = text.text[i];
-            foodName[i] = food.foodName[i];
-            foodTextures[i] = food.foodList[i];
+            foodText.Add(food.foodText[i]);
+            foodName.Add(food.foodName[i]);
+            foodTextures.Add(food.foodList[i]);
+            Debug.Log($"食物是：{foodName[i]}, 图片名是：{foodTextures[i]}, 文本内容是：{foodText[i]}");
         }
+
+        Debug.Log("成功初始化食物列表！一共初始化" +  foodName.Count + "个！");
     }
     
 }

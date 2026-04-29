@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   foodList:
   - {fileID: 2800000, guid: 0f9d4a16f1b1a154689855e77343146d, type: 3}
+  foodName:
+  - egg
+  foodText:
+  - "\u963F\u739B\u7279\u62C9\u65AF"
