@@ -1,16 +1,21 @@
 using DG.Tweening;
+using DG.Tweening.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MouseInput : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textMeshProUGUI;
     [SerializeField] private GameObject textUI;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Animator animator;
+    [SerializeField] private List<GameObject> foodGameObject;
 
     public bool ISTexureNull => isTexureNull;
 
@@ -18,6 +23,9 @@ public class MouseInput : MonoBehaviour
     private bool isTextEnd = false; // 判断文本是否播放完毕
     private RaycastHit2D hit;
     private Food food;
+    private TweenerCore<string, string, DG.Tweening.Plugins.Options.StringOptions> textAnimaion;
+    private Tween tween;
+    private string currentFoodName;
 
     private void Update()
     {
@@ -27,11 +35,36 @@ public class MouseInput : MonoBehaviour
     private void Start()
     {
         food = FindObjectOfType<Food>();
+        animator.Play("egg");
     }
 
     // 鼠标点击检测函数
     private void Detection()
     {
+
+        if (Input.GetMouseButtonDown(0) && textUI.activeSelf && isTextEnd)
+        {
+            if (tween.IsComplete())
+            {
+                tween.Rewind();
+            }
+
+            if (textAnimaion.IsComplete())
+            {
+                textAnimaion.Rewind();
+            }
+
+            textUI.SetActive(false);
+            isTextEnd = false;
+
+        }
+        else if (Input.GetMouseButtonDown(0) && textUI.activeSelf && !isTextEnd)
+        {
+            Debug.Log("发现当前动画未完成，直接结束！");
+            textAnimaion.Complete();
+        }
+
+
         if (Input.GetMouseButtonDown(0) && !textUI.activeSelf)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -45,35 +78,56 @@ public class MouseInput : MonoBehaviour
                 {
                     if (hit.collider.gameObject.name == food.FoodName[i])
                     {
-                        Cursor.SetCursor(food.FoodTextures[i], Vector2.zero, CursorMode.ForceSoftware);
+                        UnityEngine.Cursor.SetCursor(food.FoodTextures[i], Vector2.zero, CursorMode.ForceSoftware);
+                        currentFoodName = food.FoodName[i];
+                        isTexureNull = false;
                         textUI.SetActive(true);
                         Text(food.FoodText[i]);
                     }
                 }
-                
-                this.isTexureNull = false;
+              
                 Debug.Log($"当前玩家拿着食物:{isTexureNull == false }" );
-                Debug.Log("点击的物品是：" + hit.collider.gameObject.name);    
+                Debug.Log("点击的物品是：" + hit.collider.gameObject.name);
+
+                if (!isTexureNull && hit.collider && hit.collider.name == "Chopping board")
+                {
+                    Debug.Log(currentFoodName);
+                    for (int i = 0; i < foodGameObject.Count; i++)
+                    {
+
+                        if (currentFoodName == foodGameObject[i].gameObject.name)
+                        {
+                            Debug.Log("播放动画");
+                            Debug.Log(foodGameObject[i].gameObject.name);
+                            StartCoroutine(PlayAnimationDelay(foodGameObject[i].gameObject.name, i));
+                        }
+                    }
+                }
             }
         }
 
         
-        if (Input.GetMouseButtonDown(0) && textUI.activeSelf && isTextEnd)
-        {
-            textUI.SetActive(false);
-            isTextEnd = false;
-        }
     }
 
     // 文字效果
     private void Text(string text)
     {
-        canvasGroup.DOFade(1, 1);
-        DOTween.To(
+        tween = canvasGroup.DOFade(1, 1);
+        this.textAnimaion = DOTween.To(
             () => "",
             currentText => textMeshProUGUI.text = currentText,
             text,
-            1f
+            5f
          ).SetEase(Ease.Linear).OnComplete(()=> { isTextEnd = true;  Debug.Log("文字播放完毕！"); });
     }
+
+
+    IEnumerator PlayAnimationDelay(string name, int i)
+    {
+        foodGameObject[i].SetActive(true);
+
+        yield return null;
+
+        animator.SetBool("IsActive", true);
+    }    
 }
