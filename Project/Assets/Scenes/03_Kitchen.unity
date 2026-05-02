@@ -654,7 +654,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &719281903
 Transform:
   m_ObjectHideFlags: 0
@@ -830,7 +830,7 @@ MonoBehaviour:
   textMeshProUGUI: {fileID: 1566518799}
   textUI: {fileID: 86665615}
   canvasGroup: {fileID: 86665620}
-  animator: {fileID: 1643017564}
+  animator: {fileID: 2076446987}
   foodGameObject:
   - {fileID: 719281902}
 --- !u!1 &1566518797
