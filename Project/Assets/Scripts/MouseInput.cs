@@ -7,6 +7,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 public class MouseInput : MonoBehaviour
@@ -40,6 +41,12 @@ public class MouseInput : MonoBehaviour
     // 鼠标点击检测函数
     private void Detection()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        {
+            Debug.Log("点到了UI，返回！");
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0) && !textUI.activeSelf)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -120,6 +127,8 @@ public class MouseInput : MonoBehaviour
         ).SetEase(Ease.Linear).OnComplete(() => { isTextEnd = true; Debug.Log("文字播放完毕！"); });
     }
     #endregion
+
+    // 判断动画是否播完
 
     IEnumerator FoodAnimationAndWait(int i, string name)
     {
