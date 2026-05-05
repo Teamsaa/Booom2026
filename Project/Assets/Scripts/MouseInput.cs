@@ -41,6 +41,7 @@ public class MouseInput : MonoBehaviour
     // 鼠标点击检测函数
     private void Detection()
     {
+        // 如过判断点击到的是UI界面，直接返回，因为Ray射线检测会穿透UI层，所以要做一下特殊处理
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
             return;
@@ -52,7 +53,7 @@ public class MouseInput : MonoBehaviour
             hit = Physics2D.Raycast(ray.origin, ray.direction);
             Debug.Log($"当前玩家拿着食物:{isTexureNull == false}");
 
-            // 判断玩家是否点到食材
+            // 判断玩家是否点到物品（包括案板、食材）
             if (Physics2D.Raycast(ray.origin,ray.direction) && hit.collider != null)
             {
                 for (int i = 0; i < food.FoodName.Count; i++)
@@ -87,6 +88,11 @@ public class MouseInput : MonoBehaviour
                         }
                     }
                 }
+            }
+            else if (!isTexureNull && !hit.collider)
+            {
+                UnityEngine.Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
+                isTexureNull = true;
             }
         }
 
