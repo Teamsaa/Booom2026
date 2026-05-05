@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -14,7 +15,7 @@ public class SettingButton : MonoBehaviour
         if (settingPanel != null)
         {
             settingPanel.SetActive(true);
-            mask.SetActive(true);
+            mask.SetActive(true); 
         }
     }
 

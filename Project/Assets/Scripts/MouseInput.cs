@@ -43,7 +43,6 @@ public class MouseInput : MonoBehaviour
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log("点到了UI，返回！");
             return;
         }
 
