@@ -13,10 +13,15 @@ public class SettingMenu : MonoBehaviour
 
     private bool isMusicMute = false;
     private bool isClipMute = false;
+    private MusicManger musicManger;
 
     // 实际上这里并不参与任何音量设置，只做传参使用
     private void Start()
     {
+        musicManger = FindAnyObjectByType<MusicManger>();
+        musicSlider.value = musicManger.MusicVolume;
+        clipSlider.value = musicManger.ClipVolume;
+
         musicSlider.onValueChanged.AddListener((val) => {
             GameEvent.OnVolumeChanged?.Invoke("Music", val);
         });
@@ -55,9 +60,6 @@ public class SettingMenu : MonoBehaviour
             }
         });
 
-        // 初始化滑块音量
-        musicSlider.value = 1;
-        clipSlider.value = 1;
     }
 
     public void ExitGame()

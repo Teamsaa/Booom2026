@@ -13,8 +13,11 @@ public class MusicManger : Singleton<MusicManger>
     [SerializeField] private AudioMixer audioMixer;
 
     [Header("记录当前音量(0-1)")]
-    [SerializeField] private float musicVolume = 0.75f;
-    [SerializeField] private float clipVolume = 0.75f;
+    [SerializeField] private float musicVolume = 1f;
+    [SerializeField] private float clipVolume = 1f;
+
+    public float MusicVolume => musicVolume;
+    public float ClipVolume => clipVolume;
 
     private AudioSource clipSource;
 
