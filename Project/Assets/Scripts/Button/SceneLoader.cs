@@ -5,12 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader: MonoBehaviour
 {
-    private TransitionEffect effect;
+    public TransitionEffect effect;
 
-    private void Start()
-    {
-        effect = FindObjectOfType<TransitionEffect>();
-    }
 
     public void ChangeScene(int index)
     {
