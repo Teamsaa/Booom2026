@@ -16,10 +16,17 @@ public class MusicManger : Singleton<MusicManger>
     [SerializeField] private float musicVolume = 0.75f;
     [SerializeField] private float clipVolume = 0.75f;
 
+    private AudioSource clipSource;
+
     protected override void Init()
     {
         base.Init();
+        clipSource = transform.Find("Clip").GetComponent<AudioSource>();
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    private void Update()
+    {
     }
 
     #region 事件订阅 & 音量修改
