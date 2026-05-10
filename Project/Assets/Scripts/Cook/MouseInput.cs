@@ -1,4 +1,4 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using DG.Tweening.Core;
 using System;
 using System.Collections;
@@ -9,6 +9,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
+
 
 public class MouseInput : MonoBehaviour
 {
@@ -18,15 +20,13 @@ public class MouseInput : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private List<GameObject> foodGameObject;
 
-    public bool ISTexureNull => isTexureNull; // ÔİÊ±Ã»ÓÃµ½ÏÈ·Å×Å
 
-    private bool isTexureNull = true; // ÅĞ¶Ïµ±Ç°Íæ¼ÒÊÇ·ñÓĞÄÃ×ÅÊ³²Ä,true ±íÊ¾µ±Ç°Ã»ÓĞÄÃ, false ±íÊ¾µ±Ç°Íæ¼ÒÓĞÄÃ
-    private bool isTextEnd = false; // ÅĞ¶ÏÎÄ±¾ÊÇ·ñ²¥·ÅÍê±Ï
+    private bool isTextEnd = false; // åˆ¤æ–­æ–‡æœ¬æ˜¯å¦æ’­æ”¾å®Œæ¯•
     private RaycastHit2D hit;
     private Food food;
     private TweenerCore<string, string, DG.Tweening.Plugins.Options.StringOptions> textAnimaion;
     private Tween tween;
-    private string currentFoodName; // ÓÃÀ´±£´æµ±Ç°Íæ¼Òµã»÷µÄÊ³ÎïµÄÃû×Ö ºóĞøÓÃÀ´ÅĞ¶Ï¶¯»­²¥·ÅºÍÎÄ±¾ÄÚÈİ
+    private string currentFoodName; // ç”¨æ¥ä¿å­˜å½“å‰ç©å®¶ç‚¹å‡»çš„é£Ÿç‰©çš„åå­— åç»­ç”¨æ¥åˆ¤æ–­åŠ¨ç”»æ’­æ”¾å’Œæ–‡æœ¬å†…å®¹
 
     private void Update()
     {
@@ -38,41 +38,42 @@ public class MouseInput : MonoBehaviour
         food = FindObjectOfType<Food>();
     }
 
-    // Êó±êµã»÷¼ì²âº¯Êı
+    // é¼ æ ‡ç‚¹å‡»æ£€æµ‹å‡½æ•°
     private void Detection()
     {
-        // Èç¹ıÅĞ¶Ïµã»÷µ½µÄÊÇUI½çÃæ£¬Ö±½Ó·µ»Ø£¬ÒòÎªRayÉäÏß¼ì²â»á´©Í¸UI²ã£¬ËùÒÔÒª×öÒ»ÏÂÌØÊâ´¦Àí
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-        {
-            return;
-        }
-
         if (Input.GetMouseButtonDown(0) && !textUI.activeSelf)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            hit = Physics2D.Raycast(ray.origin, ray.direction);
-            Debug.Log($"µ±Ç°Íæ¼ÒÄÃ×ÅÊ³Îï:{isTexureNull == false}");
+            PointerEventData eventData = new PointerEventData(EventSystem.current);
+            eventData.position = Input.mousePosition;
 
-            // ÅĞ¶ÏÍæ¼ÒÊÇ·ñµãµ½ÎïÆ·£¨°üÀ¨°¸°å¡¢Ê³²Ä£©
-            if (Physics2D.Raycast(ray.origin,ray.direction) && hit.collider != null)
+            // å­˜å‚¨å°„çº¿ç¢°æ’åˆ°çš„æ‰€æœ‰ UI ç»“æœ
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventData, results);
+
+
+            // åˆ¤æ–­ç©å®¶æ˜¯å¦ç‚¹åˆ°ç‰©å“ï¼ˆåŒ…æ‹¬æ¡ˆæ¿ã€é£Ÿæï¼‰
+            if (results.Count > 0)
             {
+                Debug.Log("ç‚¹å‡»åˆ°çš„ UI åç§°æ˜¯: " + results[0].gameObject.name);
                 for (int i = 0; i < food.FoodName.Count; i++)
                 {
-                    if (hit.collider.gameObject.name == food.FoodName[i])
+                    Debug.Log(food.FoodName[i]);
+                    if (results[0].gameObject.name == food.FoodName[i])
                     {
-                        UnityEngine.Cursor.SetCursor(food.FoodTextures[i], Vector2.zero, CursorMode.ForceSoftware);
+                        Debug.Log("åˆ¤æ–­æˆåŠŸï¼");
+                        Cursor.visible = false;
+                        var temp = results[0].gameObject.GetComponent<Follow>();       
+                        temp.isFollow = true;
                         currentFoodName = food.FoodName[i];
-                        isTexureNull = false;
                         textUI.SetActive(true);
                         Text(food.FoodText[i]);
                     }
                 }
               
-                Debug.Log($"µ±Ç°Íæ¼ÒÄÃ×ÅÊ³Îï:{isTexureNull == false }" );
-                Debug.Log("µã»÷µÄÎïÆ·ÊÇ£º" + hit.collider.gameObject.name);
+                Debug.Log($"å½“å‰ç©å®¶æ‹¿ç€é£Ÿç‰©:{Cursor.visible == false }" );
 
-                // µã»÷µ½²Ë°å¾Í²¥·Å×ö²Ë¶¯»­
-                if (!isTexureNull && hit.collider && hit.collider.name == "Chopping board")
+                // ç‚¹å‡»åˆ°èœæ¿å°±æ’­æ”¾åšèœåŠ¨ç”»
+                if (!Cursor.visible && results[0].gameObject.name == "â€Œchopping board")
                 {
                     Debug.Log(currentFoodName);
 
@@ -81,7 +82,7 @@ public class MouseInput : MonoBehaviour
 
                         if (currentFoodName == foodGameObject[i].gameObject.name)
                         {
-                            Debug.Log("²¥·Å¶¯»­");
+                            Debug.Log("æ’­æ”¾åŠ¨ç”»");
                             Debug.Log(foodGameObject[i].gameObject.name);
                             foodGameObject[i].SetActive(true);
                             StartCoroutine(FoodAnimationAndWait(i, foodGameObject[i].gameObject.name));
@@ -89,14 +90,14 @@ public class MouseInput : MonoBehaviour
                     }
                 }
             }
-            else if (!isTexureNull && !hit.collider)
+            else if (!Cursor.visible && !hit.collider)
             {
                 UnityEngine.Cursor.SetCursor(null, Vector2.zero, CursorMode.ForceSoftware);
-                isTexureNull = true;
+                Cursor.visible = true;
             }
         }
 
-        // ÕâÀïÊÇ¿ìËÙ²¥·ÅÍêDotweenÎÄ×Ö¶¯»­Ğ§¹ûµÄÂß¼­ ºÍ ÖØÖÃDotween¶¯»­Ğ§¹û
+        // è¿™é‡Œæ˜¯å¿«é€Ÿæ’­æ”¾å®ŒDotweenæ–‡å­—åŠ¨ç”»æ•ˆæœçš„é€»è¾‘ å’Œ é‡ç½®DotweenåŠ¨ç”»æ•ˆæœ
         if (Input.GetMouseButtonDown(0) && textUI.activeSelf && isTextEnd)
         {
             canvasGroup.alpha = 0;
@@ -107,14 +108,14 @@ public class MouseInput : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0) && textUI.activeSelf && !isTextEnd)
         {
-            Debug.Log("·¢ÏÖµ±Ç°¶¯»­Î´Íê³É£¬Ö±½Ó½áÊø£¡");
+            Debug.Log("å‘ç°å½“å‰åŠ¨ç”»æœªå®Œæˆï¼Œç›´æ¥ç»“æŸï¼");
             textAnimaion.Complete();
         }
 
     }
 
-    #region Dotween×öµÄÎÄ×Ö¶¯»­Ğ§¹û
-    // ÎÄ×ÖĞ§¹û
+    #region Dotweenåšçš„æ–‡å­—åŠ¨ç”»æ•ˆæœ
+    // æ–‡å­—æ•ˆæœ
     private void Text(string text)
     {
         tween = canvasGroup.DOFade(1, 1);
@@ -128,12 +129,12 @@ public class MouseInput : MonoBehaviour
            () => "",
            currentText => textMeshProUGUI.text = currentText,
            text,
-           5f
-        ).SetEase(Ease.Linear).OnComplete(() => { isTextEnd = true; Debug.Log("ÎÄ×Ö²¥·ÅÍê±Ï£¡"); });
+           2f
+        ).SetEase(Ease.Linear).OnComplete(() => { isTextEnd = true; Debug.Log("æ–‡å­—æ’­æ”¾å®Œæ¯•ï¼"); });
     }
     #endregion
 
-    // ÅĞ¶Ï¶¯»­ÊÇ·ñ²¥Íê
+    // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦æ’­å®Œ
 
     IEnumerator FoodAnimationAndWait(int i, string name)
     {
