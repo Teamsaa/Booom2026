@@ -25,7 +25,7 @@ public class MouseInput : MonoBehaviour
     private Food food;
     private TweenerCore<string, string, DG.Tweening.Plugins.Options.StringOptions> textAnimaion;
     private Tween tween;
-    private string currentFoodName; // 用来保存当前玩家点击的食物的名字 后续用来判断动画播放和文本内容
+    private GameObject currentFood; // 用来保存当前玩家点击的食物的名字 后续用来判断动画播放和文本内容
     private GameObject clickedObj;
 
     private void Update()
@@ -49,7 +49,7 @@ public class MouseInput : MonoBehaviour
             // 存储射线碰撞到的所有 UI 结果
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, results);
-            
+            GameEvent.OnBowlChange?.Invoke(currentFood, results[0].gameObject);
             Debug.Log("点击到的 UI 名称是: " + results[0].gameObject.name);
 
             // 判断玩家是否点到物品（包括案板、食材）
@@ -66,8 +66,7 @@ public class MouseInput : MonoBehaviour
                         {
                             temp.isFollow = true;
                         }
-                        currentFoodName = food.FoodName[i];
-                        textUI.SetActive(true);
+                        currentFood = results[0].gameObject;
                         Text(food.FoodText[i]);
                     }
                 }
@@ -76,12 +75,12 @@ public class MouseInput : MonoBehaviour
             // 点击到菜板就播放做菜动画
             if (!Cursor.visible && results[0].gameObject.name == "‌chopping board")
             {
-                Debug.Log(currentFoodName);
+                Debug.Log(currentFood);
 
                 for (int i = 0; i < foodGameObject.Count; i++)
                 {
 
-                    if (currentFoodName == foodGameObject[i].gameObject.name)
+                    if (currentFood.name == foodGameObject[i].gameObject.name)
                     {
                         Debug.Log("播放动画");
                         Debug.Log(foodGameObject[i].gameObject.name);
@@ -114,6 +113,9 @@ public class MouseInput : MonoBehaviour
     // 文字效果
     private void Text(string text)
     {
+        if (text == "") return;
+
+        textUI.SetActive(true);
         tween = canvasGroup.DOFade(1, 1);
         StartCoroutine(TextAnimation(text));
     }
@@ -130,18 +132,25 @@ public class MouseInput : MonoBehaviour
     }
     #endregion
 
-    // 判断动画是否播完
+    /// <summary>
+    /// 播放动画的组件
+    /// </summary>
+    /// <param name="index">传入参数，表示当前应该播放那个菜的动画</param>
+    /// <param name="name">菜的名字</param>
+    /// <param name="clickedObj">相对应的菜的obj</param>
+    /// <returns></returns>
 
-    IEnumerator FoodAnimationAndWait(int i, string name, GameObject clickedObj)
+    IEnumerator FoodAnimationAndWait(int index, string name, GameObject clickedObj)
     {
         animator.Play(name);
         if (clickedObj.TryGetComponent<Follow>(out var temp))
         {
-            temp.SetMeat(false, false);
+            temp.SetAnimationNext(name, true);
         }
 
         yield return null;
 
+        // 判断动画是否播完
         while (true)
         {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -155,9 +164,9 @@ public class MouseInput : MonoBehaviour
             yield return null;
         }
 
-        foodGameObject[i].SetActive(false);  
+        foodGameObject[index].SetActive(false);  
         Destroy(clickedObj);
         Cursor.visible = true;
-        temp.SetMeat(true, true);
+        temp.SetAnimationNext(name, false);
     }
 }

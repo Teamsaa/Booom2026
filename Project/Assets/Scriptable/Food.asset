@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fcd2dc1144354944bdfb82a8ef4d50d, type: 3}
   m_Name: Food
   m_EditorClassIdentifier: 
-  foodTexturedList: []
   foodName:
   - meat
+  - fr
+  - sr
   foodText:
   - "\u7528\u624B\u6309\u538B\u540E\u6709\u8F7B\u8F7B\u7684\u56DE\u5F39...\u800C\u4E14\u8F6F\u8F6F\u547C\u547C\u7684\uFF0C\u8FD9\u5927\u6982\u662F\u8089\u5427"
-  foodTextureWide: 28010000
-  foodTextureHight: 6f000000
+  - 
+  - 

@@ -7,4 +7,5 @@ public static class GameEvent
 {
     public static Action<string, float> OnVolumeChanged;
     public static Action<string, bool> OnButtonVolumeChanged;
+    public static Action<GameObject, GameObject> OnBowlChange;
 }
