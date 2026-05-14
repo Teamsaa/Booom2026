@@ -52,7 +52,8 @@ public class Bowl : MonoBehaviour
             {
                 myImage.sprite = bowl1;
                 isBowl1 = true;
-                rect.sizeDelta = new Vector2(343, 291);
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 347);
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 209);
             }
         }
         else if (food.name == "sr")
@@ -64,7 +65,8 @@ public class Bowl : MonoBehaviour
             {
                 myImage.sprite = bowl2;
                 isBowl2 = true;
-                rect.sizeDelta = new Vector2(347, 309);
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 343);
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 291);
             }
         }
     }
