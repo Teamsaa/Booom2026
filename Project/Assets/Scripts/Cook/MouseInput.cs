@@ -19,6 +19,7 @@ public class MouseInput : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Animator animator;
     [SerializeField] private List<GameObject> foodGameObject;
+    [SerializeField] private Camera targetCamera;
 
     private bool isTextEnd = false; // 判断文本是否播放完毕
     private RaycastHit2D hit;
@@ -26,7 +27,7 @@ public class MouseInput : MonoBehaviour
     private TweenerCore<string, string, DG.Tweening.Plugins.Options.StringOptions> textAnimaion;
     private Tween tween;
     private GameObject currentFood = null; // 用来保存当前玩家点击的食物的名字 后续用来判断动画播放和文本内容
-    private Transform currentTransform;
+    private Vector3 currentTransform;
     private GameObject clickedObj;
 
     private void Update()
@@ -67,7 +68,7 @@ public class MouseInput : MonoBehaviour
                         Debug.Log("判断成功！");
                         Cursor.visible = false;
                         clickedObj = results[0].gameObject;
-                        currentTransform = clickedObj.transform;
+                        currentTransform = clickedObj.transform.position;
                         if (clickedObj.TryGetComponent<Follow>(out var temp))
                         {
                             temp.isFollow = true;
@@ -79,18 +80,53 @@ public class MouseInput : MonoBehaviour
                 }
             }
                 Debug.Log($"当前玩家拿着食物:{Cursor.visible == false}");
+
             // 点击到菜板就播放做菜动画
             if (!Cursor.visible && results[0].gameObject.tag == "AnimationTriger")
             {
-                Debug.Log(currentFood);
-
                 for (int i = 0; i < foodGameObject.Count; i++)
                 {
                     if (currentFood.name == foodGameObject[i].gameObject.name)
-                    {
-                        foodGameObject[i].SetActive(true);
+                    {                   
                         animator = foodGameObject[i].GetComponent<Animator>();
-                        StartCoroutine(FoodAnimationAndWait(i, foodGameObject[i].gameObject.name, clickedObj));
+                        var Image = results[0].gameObject.GetComponent<UnityEngine.UI.Image>();
+                        switch (currentFood.name)
+                        {
+                            case "baijiu":
+                                if (Image.sprite.name == "zf_zwsr") return;
+                                if (Image.sprite.name == "zf_zwfr")
+                                {
+                                    foodGameObject[i].SetActive(true);
+                                    AnimationTransform(currentFood.name, foodGameObject[i], results[0].gameObject);
+                                    StartCoroutine(FoodAnimationAndWait(i, foodGameObject[i].gameObject.name, clickedObj, results[0].gameObject));
+                                }
+
+                                break;
+                            case "salt":
+                                if (Image.sprite.name == "zf_zwfr") return;
+                                if (Image.sprite.name == "zf_zwsr")
+                                {
+                                    foodGameObject[i].SetActive(true);
+                                    AnimationTransform(currentFood.name, foodGameObject[i], results[0].gameObject);
+                                    StartCoroutine(FoodAnimationAndWait(i, foodGameObject[i].gameObject.name, clickedObj, results[0].gameObject));
+                                }
+                                
+                                break;
+                            case "sugar":
+                                if (Image.sprite.name == "zf_zwsr") return;
+                                if (Image.sprite.name == "zf_zwfr")
+                                {
+                                    foodGameObject[i].SetActive(true);
+                                    AnimationTransform(currentFood.name, foodGameObject[i], results[0].gameObject);
+                                    StartCoroutine(FoodAnimationAndWait(i, foodGameObject[i].gameObject.name, clickedObj, results[0].gameObject));
+                                }
+
+                                break;
+                            default:
+                                foodGameObject[i].SetActive(true);
+                                StartCoroutine(FoodAnimationAndWait(i, foodGameObject[i].gameObject.name, clickedObj, results[0].gameObject));
+                                break;
+                        }
                     }
                 }
             }
@@ -144,13 +180,13 @@ public class MouseInput : MonoBehaviour
     /// <param name="clickedObj">相对应的菜的obj</param>
     /// <returns></returns>
 
-    IEnumerator FoodAnimationAndWait(int index, string name, GameObject clickedObj)
+    IEnumerator FoodAnimationAndWait(int index, string name, GameObject clickedObj, GameObject resultsGameObejct)
     {
         animator.Play(name);
         bool isDestory = true;
         if (clickedObj.TryGetComponent<Follow>(out var temp))
         {
-            temp.SetAnimationNext(name, true, out isDestory);
+            temp.SetAnimationNext(name, true, out isDestory, resultsGameObejct);
         }
 
         yield return null;
@@ -170,13 +206,92 @@ public class MouseInput : MonoBehaviour
         }
 
         foodGameObject[index].SetActive(false);
-        Debug.Log($"是否销毁：{isDestory == true}");
         if (isDestory)
+        {
             Destroy(clickedObj);
+        }  
         else
+        {
             temp.isFollow = false;
-            clickedObj.transform.position = currentTransform.position;
+            clickedObj.transform.position = currentTransform;
+        }
+            
         Cursor.visible = true;
-        temp.SetAnimationNext(name, false, out isDestory);
+        temp.SetAnimationNext(name, false, out isDestory, resultsGameObejct);
+    }
+    
+
+    // 改变动画播放的位置
+    private void AnimationTransform(string foodName, GameObject foodGameObejct, GameObject resultsGameObejct)
+    {
+        var tempImage = resultsGameObejct.GetComponent<UnityEngine.UI.Image>();
+        var tempRectTransform = resultsGameObejct.GetComponent<RectTransform>();
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(targetCamera, tempRectTransform.position);
+        Vector3 worldPos;
+
+        switch (foodName)
+        {
+            case "baijiu":
+                // 转换为场景坐标的方法
+                if (RectTransformUtility.ScreenPointToWorldPointInRectangle(tempRectTransform, screenPoint, targetCamera, out worldPos))
+                {
+                    if (resultsGameObejct.name == "bowl01")
+                    {
+                        worldPos.x = -2.74f;
+                        worldPos.y = 0f;
+                        worldPos.z = 0f;
+                    }
+                    else if (resultsGameObejct.name == "bowl02")
+                    {
+                        worldPos.x = 0.36f;
+                        worldPos.y = 0f;
+                        worldPos.z = 0f;
+                    }
+
+                    foodGameObejct.transform.position = worldPos;
+                }
+
+                break;
+            case "salt":
+                if (RectTransformUtility.ScreenPointToWorldPointInRectangle(tempRectTransform, screenPoint, targetCamera, out worldPos))
+                {
+                    if (resultsGameObejct.name == "bowl01")
+                    {
+                        worldPos.x = -0.44f;
+                        worldPos.y = 0.1f;
+                        worldPos.z = 0f;
+                    }
+                    else if (resultsGameObejct.name == "bowl02")
+                    {
+                        worldPos.x = 2.84f;
+                        worldPos.y = 0.1f;
+                        worldPos.z = 0f;
+                    }
+
+                    foodGameObejct.transform.position = worldPos;
+                }
+                break;
+            case "sugar":
+                if (RectTransformUtility.ScreenPointToWorldPointInRectangle(tempRectTransform, screenPoint, targetCamera, out worldPos))
+                {
+                    if (resultsGameObejct.name == "bowl01")
+                    {
+                        worldPos.x = -0.44f;
+                        worldPos.y = 0.1f;
+                        worldPos.z = 0f;
+                    }
+                    else if (resultsGameObejct.name == "bowl02")
+                    {
+                        worldPos.x = 2.84f;
+                        worldPos.y = 0.1f;
+                        worldPos.z = 0f;
+                    }
+
+                    foodGameObejct.transform.position = worldPos;
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

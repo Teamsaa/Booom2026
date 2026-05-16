@@ -14,13 +14,17 @@ public class Bowl : MonoBehaviour
     [SerializeField] private Sprite bowl1;
     [SerializeField] private Sprite bowl2;
 
+    #region 属性引用 用来方便查看哪里有在用
     public bool ISBowl1 => isBowl1;
     public bool ISBowl2 => isBowl2;
+
+    #endregion
 
     private Image myImage;
     private RectTransform rect;
     private bool isBowl1 = false;
     private bool isBowl2 = false;
+
 
 
     private void OnEnable()
@@ -52,8 +56,6 @@ public class Bowl : MonoBehaviour
             {
                 myImage.sprite = bowl1;
                 isBowl1 = true;
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 347);
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 209);
             }
         }
         else if (food.name == "sr")
@@ -65,8 +67,6 @@ public class Bowl : MonoBehaviour
             {
                 myImage.sprite = bowl2;
                 isBowl2 = true;
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 343);
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 291);
             }
         }
     }

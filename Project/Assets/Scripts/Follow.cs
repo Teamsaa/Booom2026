@@ -10,8 +10,12 @@ public class Follow : MonoBehaviour
     [SerializeField] private GameObject knife;
     [SerializeField] private GameObject fr;
     [SerializeField] private GameObject sr;
-    public bool isFollow = false;
+    [SerializeField] private GameObject baijiuZi;
+    [SerializeField] private GameObject salt;
+    [SerializeField] private GameObject sugar;
 
+
+    public bool isFollow = false;
     private Image image;
 
     private void OnDestroy()
@@ -19,10 +23,14 @@ public class Follow : MonoBehaviour
         Debug.Log("我被销毁了！");
     }
 
+    private void Start()
+    {
+        image = GetComponent<Image>();
+    }
+
     void Update()
     {
         SetFollow();
-        image = GetComponent<Image>();
     }
 
     public void SetFollow()
@@ -34,6 +42,7 @@ public class Follow : MonoBehaviour
         image.raycastTarget = false;
 
         transform.position = canvas.worldCamera.ScreenToWorldPoint(screenPos);
+        transform.SetAsLastSibling();
     }
 
     /// <summary>
@@ -45,19 +54,48 @@ public class Follow : MonoBehaviour
     /// 因为我们最终都是要进行隐藏物体，所以对传进来的参数进行！运算处理，如果传进来的是true表示想在动画播放前进行隐藏，进行==true预算，结果false隐藏;
     /// 如果传进来为false, 表示想播完后重新显现，==ture运算，结果为true,显示。（只对==true的做特殊处理）
     /// </param>
-    public void SetAnimationNext(string foodName, bool isActive, out bool isDestroy)
+    public void SetAnimationNext(string foodName, bool isActive, out bool isDestroy, GameObject resultGameobject)
     {
+        var tempImage = resultGameobject.GetComponent<Image>();
         switch (foodName)
         {
             case "meat":
-                image.enabled = false;// 这个是特殊的不管
+                image.enabled = !isActive == true;
                 knife.SetActive(!isActive == true);
                 fr.SetActive(isActive == false);
                 sr.SetActive(isActive == false);
                 isDestroy = true;
                 break;
             case "baijiu":
+                image.raycastTarget = true;
+                image.enabled = !isActive == true;
+                isDestroy = false;                
+                if (tempImage.sprite.name == "zf_zwfr")
+                {
+                    baijiuZi.SetActive(!isActive == true);
+                    baijiuZi.transform.position = resultGameobject.gameObject.transform.position;
+                }
+                
+                break;
+            case "salt":
+                image.raycastTarget = true;
+                image.enabled = !isActive == true;
                 isDestroy = false;
+                if (tempImage.sprite.name == "zf_zwsr")
+                {
+                    salt.SetActive(!isActive == true);
+                    salt.transform.position = resultGameobject.gameObject.transform.position;
+                }
+                break;
+            case "sugar":
+                image.raycastTarget = true;
+                image.enabled = !isActive == true;
+                isDestroy = false;
+                if (tempImage.sprite.name == "zf_zwfr")
+                {
+                    sugar.SetActive(!isActive == true);
+                    sugar.transform.position = resultGameobject.gameObject.transform.position;
+                }
                 break;
             default:
                 Debug.Log("传进来空参数，有问题！");
