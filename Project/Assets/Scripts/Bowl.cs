@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -17,7 +18,7 @@ public class Bowl : MonoBehaviour
     #region 属性引用 用来方便查看哪里有在用
     public bool ISBowl1 => isBowl1;
     public bool ISBowl2 => isBowl2;
-
+    public bool ISFull => isFull;
     #endregion
 
     private Image myImage;
@@ -74,11 +75,14 @@ public class Bowl : MonoBehaviour
         Debug.Log($"食物的名字是：{food.name}");
         if ((food.name == "qhfr" || food.name == "qhsr") && !isFull)
         {
-            var temp = food.GetComponent<Follow>();
-            temp.isFollow = false;
+            var temp1 = food.GetComponent<Follow>();
+            var temp2 = food.GetComponent<Image>();
+            temp1.isFollow = false;
+            temp2.raycastTarget = false;
             Cursor.visible = true;
             food.transform.position = this.gameObject.transform.position;
             isFull = true;
         }
     }
 }
+

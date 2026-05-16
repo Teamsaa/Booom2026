@@ -43,7 +43,6 @@ public class Follow : MonoBehaviour
         screenPos.z = canvas.planeDistance; // UI 距离相机的深度
         image.raycastTarget = false;
 
-        Debug.Log("物体正在跟随鼠标！！");
         transform.position = canvas.worldCamera.ScreenToWorldPoint(screenPos);
         transform.SetAsLastSibling();
     }

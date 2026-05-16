@@ -28,6 +28,7 @@ public class ChangeCookWare : MonoBehaviour
     private Image sugarImage;
     private bool isEnd01 = false;
     private bool isEnd02 = false;
+    private bool isEnd03 = false;
 
     [Header("场景二变换")]
     [SerializeField] private Animator bowlChangeCookWare02;
@@ -43,7 +44,24 @@ public class ChangeCookWare : MonoBehaviour
     [SerializeField] private Sprite bowlSprite;
     [SerializeField] private Sprite yzfrSprite;
     [SerializeField] private Sprite yzsrSprite;
-    
+
+    [Header("场景三变换")]
+    [SerializeField] private GameObject fz;
+    [SerializeField] private GameObject jdpz;
+    [SerializeField] private GameObject jd;
+    [SerializeField] private GameObject srw;
+    [SerializeField] private GameObject qhsr;
+    [SerializeField] private GameObject frw;
+    [SerializeField] private GameObject qhfr;
+    [SerializeField] private GameObject ycw;
+    [SerializeField] private GameObject yc;
+    [SerializeField] private GameObject csj;
+    [SerializeField] private GameObject bowl01GameObject;
+    [SerializeField] private GameObject bowl02GameObject;
+    [SerializeField] private GameObject qhfrBefore;
+    [SerializeField] private GameObject qhsrBefore;
+    [SerializeField] private GameObject yzfrAnimator;
+    [SerializeField] private GameObject yzsrAnimator;
 
 
     private void Start()
@@ -73,6 +91,13 @@ public class ChangeCookWare : MonoBehaviour
             Debug.Log("现在开始播放变换做菜场景动画02！");
             isEnd02 = true;
             DotweenAnimation02();
+        }
+
+        if (!isEnd03 && bowl1.ISFull && bowl2.ISFull)
+        {
+            Debug.Log("现在开始播放变换做菜场景动画03！");
+            isEnd03 = true;
+            DotweenAnimation03();
         }
     }
 
@@ -143,6 +168,68 @@ public class ChangeCookWare : MonoBehaviour
             });
     }
 
+    private void DotweenAnimation03()
+    {
+        GameEvent.isScene3 = true;
+        var fzImage = fz.GetComponent<Image>();
+        var jdpzImage = jdpz.GetComponent<Image>();
+        var jdImage = jd.GetComponent<Image>();
+        var srwImage = srw.GetComponent<Image>();
+        var qhsrImage = qhsr.GetComponent<Image>();
+        var frwImage = frw.GetComponent<Image>();
+        var qhfrImage = qhfr.GetComponent<Image>();
+        var ycwImage = ycw.GetComponent<Image>();
+        var ycImage = yc.GetComponent<Image>();
+        var csjImage = csj.GetComponent<Image>();
+
+        var fzCanvas = fz.GetComponent<CanvasGroup>();
+        var jdpzCanvas = jdpz.GetComponent<CanvasGroup>();
+        var srwCanvas = srw.GetComponent<CanvasGroup>();
+        var frwCanvas = frw.GetComponent<CanvasGroup>();
+        var ycwCanvas = ycw.GetComponent<CanvasGroup>();
+        var csjCanvas = csj.GetComponent<CanvasGroup>();
+        var qhfrBeforeCanvas = qhfrBefore.GetComponent<CanvasGroup>();
+        var qhsrBeforeCanvas = qhsrBefore.GetComponent<CanvasGroup>();
+        var knife02Canvas = knife02.GetComponent<CanvasGroup>();
+        var bowl01Canvas = bowl01GameObject.GetComponent<CanvasGroup>();
+        var bowl02Canvas = bowl02GameObject.GetComponent<CanvasGroup>();
+
+        DOTween.Sequence()
+            .Append(bowl01Canvas.DOFade(0, 0.3f))
+            .Join(qhfrBeforeCanvas.DOFade(0, 0.3f))
+            .Append(bowl02Canvas.DOFade(0, 0.3f))
+            .Join(qhsrBeforeCanvas.DOFade(0, 0.3f))
+            .Append(knife02Canvas.DOFade(0, 0.3f))
+            .AppendCallback(() =>
+            {
+                Destroy(bowl01GameObject);
+                Destroy(bowl02GameObject);
+                Destroy(knife02);
+                Destroy(qhfrBefore);
+                Destroy(qhsrBefore);
+                Destroy(yzfrAnimator);
+                Destroy(yzsrAnimator);
+            })
+            .Append(jdpzCanvas.DOFade(1, 0.3f))
+            .Append(ycwCanvas.DOFade(1, 0.3f))
+            .Append(csjCanvas.DOFade(1, 0.3f))
+            .Append(srwCanvas.DOFade(1, 0.3f))
+            .Append(frwCanvas.DOFade(1, 0.3f))
+            .Append(fzCanvas.DOFade(1, 0.3f)) 
+            .AppendCallback(() =>
+            {
+                fzImage.raycastTarget = true;
+                jdpzImage.raycastTarget = true;
+                jdImage.raycastTarget = true;
+                srwImage.raycastTarget = true;
+                qhsrImage.raycastTarget = true;
+                frwImage.raycastTarget = true;
+                qhfrImage.raycastTarget = true;
+                ycwImage.raycastTarget = true;
+                ycImage.raycastTarget = true;
+                csjImage.raycastTarget = true;
+            });
+    }
 
     private void ChangeSprite(Image bowl01, Image bowl02)
     {
