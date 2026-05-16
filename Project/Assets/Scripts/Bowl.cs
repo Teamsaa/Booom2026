@@ -24,6 +24,7 @@ public class Bowl : MonoBehaviour
     private RectTransform rect;
     private bool isBowl1 = false;
     private bool isBowl2 = false;
+    private bool isFull = false;
 
 
 
@@ -45,9 +46,9 @@ public class Bowl : MonoBehaviour
 
     private void ChangeBowl(GameObject food, GameObject targetBowl)
     {
-        if (!food) return;
+        if (!food || targetBowl != this.gameObject) return;
 
-        if (food.name == "fr")
+        if (food.name == "fr" && (myImage.sprite.name != bowl1.name && myImage.sprite.name != bowl2.name))
         {
             Cursor.visible = true;
             Destroy(food);
@@ -58,7 +59,7 @@ public class Bowl : MonoBehaviour
                 isBowl1 = true;
             }
         }
-        else if (food.name == "sr")
+        else if (food.name == "sr" && (myImage.sprite.name != bowl1.name && myImage.sprite.name != bowl2.name))
         {
             Cursor.visible = true;
             Destroy(food);
@@ -68,6 +69,16 @@ public class Bowl : MonoBehaviour
                 myImage.sprite = bowl2;
                 isBowl2 = true;
             }
+        }
+
+        Debug.Log($"食物的名字是：{food.name}");
+        if ((food.name == "qhfr" || food.name == "qhsr") && !isFull)
+        {
+            var temp = food.GetComponent<Follow>();
+            temp.isFollow = false;
+            Cursor.visible = true;
+            food.transform.position = this.gameObject.transform.position;
+            isFull = true;
         }
     }
 }

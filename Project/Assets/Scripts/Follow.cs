@@ -13,6 +13,8 @@ public class Follow : MonoBehaviour
     [SerializeField] private GameObject baijiuZi;
     [SerializeField] private GameObject salt;
     [SerializeField] private GameObject sugar;
+    [SerializeField] private GameObject qhfr;
+    [SerializeField] private GameObject qhsr;
 
 
     public bool isFollow = false;
@@ -41,6 +43,7 @@ public class Follow : MonoBehaviour
         screenPos.z = canvas.planeDistance; // UI 距离相机的深度
         image.raycastTarget = false;
 
+        Debug.Log("物体正在跟随鼠标！！");
         transform.position = canvas.worldCamera.ScreenToWorldPoint(screenPos);
         transform.SetAsLastSibling();
     }
@@ -96,6 +99,16 @@ public class Follow : MonoBehaviour
                     sugar.SetActive(!isActive == true);
                     sugar.transform.position = resultGameobject.gameObject.transform.position;
                 }
+                break;
+            case "yzsr":
+                qhsr.SetActive(!isActive == true);
+                image.enabled = !isActive == true;
+                isDestroy = true;
+                break;
+            case "yzfr":
+                qhfr.SetActive(!isActive == true);
+                image.enabled = !isActive == true;
+                isDestroy = true;
                 break;
             default:
                 Debug.Log("传进来空参数，有问题！");

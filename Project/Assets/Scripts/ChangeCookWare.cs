@@ -36,9 +36,14 @@ public class ChangeCookWare : MonoBehaviour
     [SerializeField] private GameObject fr_baijiu;
     [SerializeField] private GameObject bowlGameObject01;
     [SerializeField] private GameObject bowlGameObject02;
-    [SerializeField] private GameObject yzfr;
-    [SerializeField] private GameObject yzsr;
+    [SerializeField] private GameObject yzr01;
+    [SerializeField] private GameObject yzr02;
+    [SerializeField] private GameObject choppingBoard02;
+    [SerializeField] private GameObject knife02;
     [SerializeField] private Sprite bowlSprite;
+    [SerializeField] private Sprite yzfrSprite;
+    [SerializeField] private Sprite yzsrSprite;
+    
 
 
     private void Start()
@@ -69,9 +74,6 @@ public class ChangeCookWare : MonoBehaviour
             isEnd02 = true;
             DotweenAnimation02();
         }
-
-
-        
     }
 
 
@@ -93,32 +95,82 @@ public class ChangeCookWare : MonoBehaviour
             .AppendInterval(0.3f)
             .Append(baijiuCanvas.DOFade(1, 0.3f))
             .AppendCallback(() => baijiuImage.raycastTarget = true)
-            .OnComplete(() => {    
+            .OnComplete(() => {
                 DOTween.KillAll();
             });
     }
 
     private void DotweenAnimation02()
     {
+        var temp1 = bowlGameObject01.GetComponent<CanvasGroup>();
+        var temp2 = bowlGameObject02.GetComponent<CanvasGroup>();
+        var choppingBoard02Canvas = choppingBoard02.GetComponent<CanvasGroup>();
+        var knife02Canvas = knife02.GetComponent<CanvasGroup>();
+        var choppingBoard02Image = choppingBoard02.GetComponent<Image>();
+        var knife02Image = knife02.GetComponent<Image>();
         DOTween.Sequence()
-            .Append(saltCanvas.DOFade(0, 0.3f)).OnComplete(() => Destroy(salt))
+            .Append(saltCanvas.DOFade(0, 0.3f))
+            .AppendCallback(() => Destroy(salt))
             .AppendInterval(0.3f)
-            .Append(sugarCanvas.DOFade(0, 0.3f)).OnComplete(() => Destroy(sugar))
+            .Append(sugarCanvas.DOFade(0, 0.3f))
+            .AppendCallback(() => Destroy(sugar))
             .AppendInterval(0.3f)
-            .Append(baijiuCanvas.DOFade(0, 0.3f)).OnComplete(() => Destroy(baijiu))
+            .Append(baijiuCanvas.DOFade(0, 0.3f))
+            .AppendCallback(() => Destroy(baijiu))
             .AppendCallback(() => { Destroy(fr_baijiu); Destroy(sr_salt); Destroy(fr_sugar); })
             .AppendInterval(0.3f)
             .AppendCallback(() => bowlChangeCookWare02.Play("bowlChangeCookWare02"))
-            .OnComplete(() => {
+            .AppendInterval(0.6f)
+            .Append(temp1.DOFade(0, 0.5f))
+            .Join(temp2.DOFade(0, 0.5f))
+            .AppendCallback(() => {
                 var temp1 = bowlGameObject01.GetComponent<UnityEngine.UI.Image>();
                 var temp2 = bowlGameObject02.GetComponent<UnityEngine.UI.Image>();
+                ChangeSprite(temp1, temp2);
                 temp1.sprite = bowlSprite;
                 temp2.sprite = bowlSprite;
-                yzsr.SetActive(true);
-                yzfr.SetActive(true);
+            })
+            .Append(temp1.DOFade(1, 0.5f))
+            .Join(temp2.DOFade(1, 0.5f))
+            .Append(choppingBoard02Canvas.DOFade(1, 0.5f))
+            .Join(knife02Canvas.DOFade(1, 0.5f))
+            .OnComplete(() => {
+                choppingBoard02Image.raycastTarget = true;
+                knife02Image.raycastTarget = true;
+                yzr01.SetActive(true);
+                yzr02.SetActive(true);
                 DOTween.KillAll();
             });
     }
 
 
+    private void ChangeSprite(Image bowl01, Image bowl02)
+    {
+        Debug.Log(bowl01.sprite.name + bowl02.sprite.name);
+        var yzr01Sprite = yzr01.GetComponent<Image>();
+        var yzr02Sprite = yzr02.GetComponent<Image>();
+        Debug.Log($"{yzr01Sprite} + {yzr02Sprite}");
+        if (bowl01.sprite.name == "zf_zwfr")
+        {
+            yzr01.name = "yzfr";
+            yzr01Sprite.sprite = yzfrSprite;
+        }
+        else if (bowl01.sprite.name == "zf_zwsr")
+        {
+            yzr01.name = "yzsr";
+            yzr01Sprite.sprite = yzsrSprite;
+        }
+
+        if (bowl02.sprite.name == "zf_zwfr")
+        {
+            yzr02.name = "yzfr";
+            yzr02Sprite.sprite = yzfrSprite;
+        }
+        else if (bowl02.sprite.name == "zf_zwsr")
+        {
+            yzr02.name = "yzsr";
+            yzr02Sprite.sprite = yzsrSprite;
+        }
+    }
 }
+
