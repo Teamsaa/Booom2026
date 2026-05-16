@@ -61,6 +61,7 @@ public class MouseInput : MonoBehaviour
             if (results.Count > 0 && results != null && results[0].gameObject.GetComponent<Assembly>() && GameEvent.isScene3)
             {
                 GameEvent.OnAssembly?.Invoke(currentFood ?? null, currentTransform);
+                currentFood = null;
             }
 
             // 判断玩家是否点到物品（包括案板、食材）

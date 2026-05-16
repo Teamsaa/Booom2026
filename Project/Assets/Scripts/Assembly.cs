@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,6 @@ public class Assembly : MonoBehaviour
     [SerializeField] private GameObject rollyc;
     [SerializeField] private GameObject arrow;
     private int index = 1; // 用来检查做到哪一步，如果步骤不对则无法继续
-
     private void OnEnable()
     {
         GameEvent.OnAssembly += AssemblyFood;

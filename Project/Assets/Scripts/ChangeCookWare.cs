@@ -218,7 +218,6 @@ public class ChangeCookWare : MonoBehaviour
             .Append(fzCanvas.DOFade(1, 0.3f)) 
             .AppendCallback(() =>
             {
-                fzImage.raycastTarget = true;
                 jdpzImage.raycastTarget = true;
                 jdImage.raycastTarget = true;
                 srwImage.raycastTarget = true;

@@ -866,6 +866,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &321755724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 321755725}
+  - component: {fileID: 321755727}
+  - component: {fileID: 321755726}
+  m_Layer: 5
+  m_Name: rollyc
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &321755725
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321755724}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1540901035}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -8, y: -94}
+  m_SizeDelta: {x: 455, y: 139}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &321755726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321755724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 621b0a2f9975b7b468fd11a6d2ee7aec, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &321755727
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321755724}
+  m_CullTransparentMesh: 1
 --- !u!1 &349584156
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,7 +953,6 @@ GameObject:
   - component: {fileID: 349584160}
   - component: {fileID: 349584159}
   - component: {fileID: 349584158}
-  - component: {fileID: 349584161}
   m_Layer: 5
   m_Name: fz
   m_TagString: Untagged
@@ -955,21 +1029,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 349584156}
   m_CullTransparentMesh: 1
---- !u!114 &349584161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 349584156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c03a80dade030140b796b1af7cefa9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  choppingBoard: {fileID: 370864841}
-  jdjuan: {fileID: 1469474269}
-  arrow: {fileID: 405355488}
 --- !u!1 &370864841
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,6 +1041,7 @@ GameObject:
   - component: {fileID: 370864845}
   - component: {fileID: 370864844}
   - component: {fileID: 370864843}
+  - component: {fileID: 370864846}
   m_Layer: 5
   m_Name: "\u200Cchopping board02"
   m_TagString: AnimationTriger
@@ -1058,6 +1118,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 370864841}
   m_CullTransparentMesh: 1
+--- !u!114 &370864846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370864841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c03a80dade030140b796b1af7cefa9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  choppingBoard: {fileID: 370864841}
+  jdjuan: {fileID: 1469474269}
+  roll: {fileID: 1621569479}
+  rollyc: {fileID: 321755724}
+  arrow: {fileID: 405355488}
 --- !u!1 &405355488
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,6 +1264,7 @@ MonoBehaviour:
   roll: {fileID: 1621569479}
   fz: {fileID: 349584156}
   rollAnmation: {fileID: 2034826216}
+  rollAnimator: {fileID: 2034826219}
 --- !u!1 &407882345
 GameObject:
   m_ObjectHideFlags: 0
@@ -4312,6 +4390,7 @@ RectTransform:
   - {fileID: 1492633934}
   - {fileID: 1469474270}
   - {fileID: 1621569482}
+  - {fileID: 321755725}
   - {fileID: 405355489}
   m_Father: {fileID: 1801675572}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
